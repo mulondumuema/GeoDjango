@@ -9,8 +9,8 @@ class County(models.Model):
 class counties(models.Model):
     county_1 = models.CharField(max_length=25)
     county_1_2 = models.CharField(max_length=254)
-    id = models.FloatField()
+    id = models.FloatField(primary_key=True)
     geom = models.MultiPolygonField(srid=4326)
 
     def __str__(self):
-        return 'Name: %s' % self.name
+        return self.county_1
