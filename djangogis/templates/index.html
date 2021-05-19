@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
+        {% leaflet_js %}
+        {% leaflet_css %}
         <title>Our Home</title>
     </head>
     <body>
         We are heroes!
+        <br>
+        {% leaflet_map "gis"}
     </body>
 </html>
