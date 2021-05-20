@@ -53,5 +53,16 @@ counties_mapping = {
     'id': 'ID',
     'geom': 'MULTIPOLYGON',
 }
-(geod
+```
+
+after creaeting the load_layer.py file,to upload the data to the database, get into the shell:
+
+```
+python manage.py shell
+```
+in the shell, run:
+
+```
+>>> from counties import load_layer
+>>> load_layer.run()
 ```

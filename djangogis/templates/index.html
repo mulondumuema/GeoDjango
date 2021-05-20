@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    {% load leaflet_tags %}
     <head>
         {% leaflet_js %}
         {% leaflet_css %}
@@ -8,6 +9,10 @@
     <body>
         We are heroes!
         <br>
-        {% leaflet_map "gis"}
+        {% leaflet_map "gis" %}
+        <style type="text/css">
+            #gis {width: 80%; height: 500px;}
+        </style>
+        <script type="text/javascipt" src="{% static 'dist/leaflet.ajax.js' %}"></script>
     </body>
 </html>
