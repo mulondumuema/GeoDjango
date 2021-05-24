@@ -4,15 +4,23 @@
     <head>
         {% leaflet_js %}
         {% leaflet_css %}
+       
         <title>Our Home</title>
-    </head>
-    <body>
-        We are heroes!
-        <br>
-        {% leaflet_map "gis" %}
         <style type="text/css">
             #gis {width: 80%; height: 500px;}
         </style>
         <script type="text/javascipt" src="{% static 'dist/leaflet.ajax.js' %}"></script>
+    </head>
+    <body>
+        We are heroes!
+        <br>
+        <script type="text/javascipt" >
+            function our_layers(map,options){
+                var datasets = new L.GeoJSON.AJAX("{% url 'countiesdata' %}",{
+                }); 
+                datasets.addTo(map);
+            }
+        </script>
+        {% leaflet_map "gis" callback="windows.our_layers" %}
     </body>
 </html>
