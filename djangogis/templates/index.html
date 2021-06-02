@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    {% load static %}
+    {% load leaflet_tags %}
+    
+    <head>
+
+        
+        {% leaflet_css %}
+       
+        <title>Our Home</title>
+
+        <style type="text/css">
+            #gis{
+                width: 80%; 
+                height: 550px;
+                }
+        </style>
+
+        <script type="text/javascipt" src="{% static 'dist/leaflet.ajax.js' %}"></script>
+        {% leaflet_js %}
+    </head>
+
+    <body>
+        We are heroes!
+        <br>
+        <script>
+            function our_layers(map,options){
+                var countiesdata = new L.geoJson.ajax("{% url 'countypoints' %}",{
+                }); 
+                countiesdata.addTo(map);
+            }
+        </script>
+
+        {% leaflet_map "gis" callback="window.our_layers" %}
+    </body>
+
+</html>
