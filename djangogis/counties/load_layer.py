@@ -11,7 +11,9 @@ counties_mapping = {
 }
 
 county_shp = folder_path = os.path.join(BASE_DIRe, 'djangogis/data/counties/counties.shp')
+# county_shp = folder_path = os.path.join(BASE_DIRe, 'djangogis/data/counties/counties.shp')
 
-def run(verbose=True): 
+
+def run(verbose=True):
     lm = LayerMapping(counties, county_shp, counties_mapping)
     lm.save(verbose=True)
