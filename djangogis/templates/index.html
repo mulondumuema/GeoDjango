@@ -5,7 +5,7 @@
     
     <head>
 
-        
+        {% leaflet_js %}
         {% leaflet_css %}
        
         <title>Our Home</title>
@@ -16,20 +16,63 @@
                 height: 550px;
                 }
         </style>
+        <link rel="stylesheet" type="text/css" href="{% static 'leaflet_layer_control/leaflet.groupedlayercontrol.css' %}">
+        <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}"></script>
+        <script type="text/javascript" src="{% static 'leaflet_layer_control/leaflet.groupedlayercontrol.js' %}"></script>
 
-        <script type="text/javascipt" src="{% static 'dist/leaflet.ajax.js' %}"></script>
-        {% leaflet_js %}
     </head>
 
     <body>
-        We are heroes!
+        <p>We are heroes!</p>
         <br>
         <script>
             function our_layers(map,options){
-                var countiesdata = new L.geoJson.ajax("{% url 'countypoints' %}",{
-                }); 
-                countiesdata.addTo(map);
-            }
+                let osm = 'http://{s}.tile.openstreetmap.org/{z}{y}{x}.png';
+
+                let dataset = new L.GeoJSON.AJAX("{% url 'countiesdata' %}",{
+                    style: function colors(feature){
+                        switch(feature.properties.county_1){
+                            case 'WAJIR':
+                                return{
+                                    color: 'orange',
+                                    fillOpacity: 0.8
+                                };
+                            break;
+                            case 'ISIOLO':
+                                return{
+                                    color:'purple',
+                                    fillOpacity:0.8
+                                }
+                            break;
+                        }
+                    },
+                    onEachFeature: function(feature,layer){
+                        layer.bindPopup(feature.properties.county_1.toString())
+                    }
+                });
+
+                let points = new L.GeoJSON.AJAX("{% url 'countypoints' %}",{
+                    onEachFeature: function(feature,layer){
+                        layer.bindPopup(feature.properties.name.toString())
+                    }
+                });
+
+                dataset.addTo(map);
+                points.addTo(map);
+
+                let baseLayers = {
+                    "OSM": osm
+                };
+
+                let groupedOverlays = {
+                    "Layers": {
+                        "counties": dataset,
+                        "centers": points
+                    }
+                }
+            };
+
+            L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map)
         </script>
 
         {% leaflet_map "gis" callback="window.our_layers" %}

@@ -6,6 +6,9 @@ class County(models.Model):
     capital = models.CharField(max_length=50)
     population = models.IntegerField()
 
+    def __str__(self):
+        return self.name
+
 class counties(models.Model):
     county_1 = models.CharField(max_length=25)
     county_1_2 = models.CharField(max_length=254)
