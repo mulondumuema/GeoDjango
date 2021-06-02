@@ -4,8 +4,7 @@
     {% load leaflet_tags %}
     
     <head>
-
-        
+        {% leaflet_js %}
         {% leaflet_css %}
        
         <title>Our Home</title>
@@ -16,23 +15,22 @@
                 height: 550px;
                 }
         </style>
+        <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}"></script>
 
-        <script type="text/javascipt" src="{% static 'dist/leaflet.ajax.js' %}"></script>
-        {% leaflet_js %}
     </head>
 
     <body>
-        We are heroes!
+    <p>We are heroes!</p>
         <br>
         <script>
-            function our_layers(map,options){
-                var countiesdata = new L.geoJson.ajax("{% url 'countypoints' %}",{
-                }); 
-                countiesdata.addTo(map);
+            function our_layers(map, options){
+                let dataset = new L.GeoJSON.AJAX("{% url 'countiesdata' %}",{
+                });
+                dataset.addTo(map);
             }
         </script>
 
-        {% leaflet_map "gis" callback="window.our_layers" %}
+        {% leaflet_map 'gis' callback="window.our_layers" %}
     </body>
 
 </html>
