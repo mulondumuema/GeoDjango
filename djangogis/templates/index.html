@@ -16,9 +16,11 @@
                 height: 550px;
                 }
         </style>
-        <link rel="stylesheet" type="text/css" href="{% static 'leaflet_layer_control/leaflet.groupedlayercontrol.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'leaflet_layer_control/leaflet.groupedlayercontrol.min.css' %}">
+        <link rel="stylesheet" type="text/css" href="{% static 'routing/leaflet-routing-machine.css' %}">
         <script type="text/javascript" src="{% static 'dist/leaflet.ajax.js' %}"></script>
-        <script type="text/javascript" src="{% static 'leaflet_layer_control/leaflet.groupedlayercontrol.js' %}"></script>
+        <script type="text/javascript" src="{% static 'leaflet_layer_control/leaflet.groupedlayercontrol.min.js' %}"></script>
+        <script type="text/javascript" src="{% static 'routing/leaflet-routing-machine.js' %}"></script>
 
     </head>
 
@@ -27,7 +29,15 @@
         <br>
         <script>
             function our_layers(map,options){
-                let osm = 'http://{s}.tile.openstreetmap.org/{z}{y}{x}.png';
+                let myosm = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 19,
+                    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                });
+
+                var OpenTopoMap = L.tileLayer('http://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 17,
+                    attribution: 'Map data: &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+                });
 
                 let dataset = new L.GeoJSON.AJAX("{% url 'countiesdata' %}",{
                     style: function colors(feature){
@@ -60,19 +70,30 @@
                 dataset.addTo(map);
                 points.addTo(map);
 
-                let baseLayers = {
-                    "OSM": osm
+                var baseLayers = {
+                    "OSM": myosm,
+                    "OpenTopoMap": OpenTopoMap
                 };
 
-                let groupedOverlays = {
-                    "Layers": {
-                        "counties": dataset,
-                        "centers": points
-                    }
+		        var groupedOverlays = {
+		            "Layers": {
+		            "counties": dataset,
+		            "Points": points
                 }
             };
 
-            L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map)
+            L.control.groupedLayers(baseLayers, groupedOverlays).addTo(map);
+
+            L.Routing.control({
+                waypoints: [
+                    L.latLng(-0.23, 36.94),
+                    L.latLng(1.23, 37.1)
+                ]
+            }).addTo(map);
+        }
+
+		        
+
         </script>
 
         {% leaflet_map "gis" callback="window.our_layers" %}
